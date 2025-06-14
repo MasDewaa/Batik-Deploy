@@ -2,7 +2,7 @@ import requests
 import os
 
 # URL endpoint API
-API_URL = "http://127.0.0.1:5000/predict"
+API_URL = "https://batik-deploy.vercel.app//predict"
 
 # Path ke gambar yang ingin diprediksi
 IMAGE_PATH = "../Batik Nitik Grouped/Brendhi/11 Brendhi 1_rotate_90.jpg" # <-- GANTI INI
