@@ -2,7 +2,7 @@ import requests
 import os
 
 # URL endpoint API
-API_URL = "https://used-indication-kin.sgp.dom.my.id/predict"
+API_URL = "https://batik-deploy.railway.app/predict"
 
 # Path ke gambar yang ingin diprediksi
 IMAGE_PATH = "../Batik Nitik Grouped/Brendhi/11 Brendhi 1_rotate_90.jpg" # <-- GANTI INI
