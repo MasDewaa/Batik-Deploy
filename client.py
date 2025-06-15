@@ -5,7 +5,7 @@ import sys
 # -----------------------------
 # ✅ Konfigurasi
 # -----------------------------
-API_URL = "https://batik-deploy.railway.app/predict"
+API_URL = "http://127.0.0.1:5000/api/predict"
 
 # Ganti path ini sesuai file gambar lokalmu
 IMAGE_PATH = "../Batik Nitik Grouped/Brendhi/11 Brendhi 1_rotate_90.jpg"
@@ -31,14 +31,19 @@ def main():
             print(f"[INFO] Status code: {response.status_code}")
 
             if response.status_code == 200:
-                data = response.json()
-                print("\n=== ✅ Prediksi Berhasil ===")
-                print(f"  Motif Terdeteksi     : {data['data']['class_name']}")
-                print(f"  Confidence (angka)   : {data['data']['confidence']}")
-                print(f"  Confidence (percent) : {data['data']['confidence_percent']}")
-                print(f"  Top 5 Probabilities  :")
-                for k, v in data['data']['probabilities'].items():
-                    print(f"    - {k}: {v:.4f}")
+                result = response.json()
+                if result.get("success"):
+                    data = result["data"]
+                    print("\n=== ✅ Prediksi Berhasil ===")
+                    print(f"  Motif Terdeteksi     : {data['class_name']}")
+                    print(f"  Confidence (angka)   : {data['confidence']:.4f}")
+                    print(f"  Confidence (percent) : {data['confidence_percent']}")
+                    print(f"  Top 5 Probabilities  :")
+                    for motif, prob in data['probabilities'].items():
+                        print(f"    - {motif}: {prob:.4f}")
+                else:
+                    print("\n=== ❌ Gagal Prediksi ===")
+                    print(result)
             else:
                 print("\n=== ❌ Gagal Prediksi ===")
                 try:
