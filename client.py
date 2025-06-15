@@ -1,37 +1,57 @@
 import requests
 import os
+import sys
 
-# URL endpoint API
+# -----------------------------
+# ✅ Konfigurasi
+# -----------------------------
 API_URL = "https://batik-deploy.railway.app/predict"
 
-# Path ke gambar yang ingin diprediksi
-IMAGE_PATH = "../Batik Nitik Grouped/Brendhi/11 Brendhi 1_rotate_90.jpg" # <-- GANTI INI
+# Ganti path ini sesuai file gambar lokalmu
+IMAGE_PATH = "../Batik Nitik Grouped/Brendhi/11 Brendhi 1_rotate_90.jpg"
 
-# Cek apakah file ada
-if not os.path.exists(IMAGE_PATH):
-    print(f"Error: File tidak ditemukan di {IMAGE_PATH}")
-else:
-    # Buka file gambar dalam mode binary read ('rb')
-    with open(IMAGE_PATH, 'rb') as image_file:
-        # Siapkan file untuk dikirim dalam permintaan multipart/form-data
-        files = {'file': (os.path.basename(IMAGE_PATH), image_file)}
+# -----------------------------
+# 🚀 Fungsi utama
+# -----------------------------
 
+def main():
+    # Cek file
+    if not os.path.exists(IMAGE_PATH):
+        print(f"[ERROR] File tidak ditemukan: {IMAGE_PATH}")
+        sys.exit(1)
+
+    # Siapkan multipart form-data
+    with open(IMAGE_PATH, "rb") as f:
+        files = {"file": (os.path.basename(IMAGE_PATH), f)}
         try:
-            # Kirim permintaan POST ke API
+            print(f"[INFO] Mengirim gambar ke: {API_URL}")
             response = requests.post(API_URL, files=files)
 
-            # Cek apakah permintaan berhasil (status code 200 OK)
+            # Debug status
+            print(f"[INFO] Status code: {response.status_code}")
+
             if response.status_code == 200:
-                # Tampilkan hasil prediksi dari respons JSON
-                result = response.json()
-                print("Prediksi Berhasil!")
-                print(f"  Motif: {result['prediction']}")
-                print(f"  Tingkat Kepercayaan: {result['confidence_percent']}")
+                data = response.json()
+                print("\n=== ✅ Prediksi Berhasil ===")
+                print(f"  Motif Terdeteksi     : {data['data']['class_name']}")
+                print(f"  Confidence (angka)   : {data['data']['confidence']}")
+                print(f"  Confidence (percent) : {data['data']['confidence_percent']}")
+                print(f"  Top 5 Probabilities  :")
+                for k, v in data['data']['probabilities'].items():
+                    print(f"    - {k}: {v:.4f}")
             else:
-                # Tampilkan pesan error jika permintaan gagal
-                print(f"Error: Gagal melakukan prediksi (Status Code: {response.status_code})")
-                print("Respons dari server:")
-                print(response.json())
+                print("\n=== ❌ Gagal Prediksi ===")
+                try:
+                    print(response.json())
+                except Exception:
+                    print(response.text)
 
         except requests.exceptions.RequestException as e:
-            print(f"Error: Tidak dapat terhubung ke server API. {e}")
+            print(f"[ERROR] Tidak dapat terhubung ke API: {e}")
+
+
+# -----------------------------
+# ▶️  Run script
+# -----------------------------
+if __name__ == "__main__":
+    main()

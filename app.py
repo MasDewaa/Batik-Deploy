@@ -52,10 +52,10 @@ def preprocess_image(pil_image, target_size=(224, 224)):
 def home():
     return jsonify({
         "status": "online",
-        "message": "API Klasifikasi Motif Batik Siap Digunakan. Gunakan endpoint /predict untuk prediksi."
+        "message": "API Klasifikasi Motif Batik Siap Digunakan. Gunakan endpoint /api/predict untuk prediksi."
     })
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     if model is None:
         return jsonify({"error": "Model tidak tersedia, periksa log server."}), 500
