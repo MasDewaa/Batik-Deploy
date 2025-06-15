@@ -2,8 +2,8 @@ import requests
 import os
 
 BASE_URL = "https://batik-deploy.railway.app/"  # Ganti dengan URL server Flask yang sesuai
-ROOT_URL = f"{BASE_URL}/"
-PREDICT_URL = f"{BASE_URL}/api/predict"
+ROOT_URL = f"{BASE_URL}/api/v1"
+PREDICT_URL = f"{BASE_URL}/api/v1/predict"
 
 IMAGE_PATH = "../Batik Nitik Grouped/Brendhi/11 Brendhi 1_rotate_90.jpg"
 
