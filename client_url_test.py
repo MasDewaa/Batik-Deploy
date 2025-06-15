@@ -1,7 +1,7 @@
 import requests
 import os
 
-BASE_URL = "http://127.0.0.1:5000/"  # Ganti dengan URL server Flask yang sesuai
+BASE_URL = "https://batik-deploy.railway.app/"  # Ganti dengan URL server Flask yang sesuai
 ROOT_URL = f"{BASE_URL}/"
 PREDICT_URL = f"{BASE_URL}/api/predict"
 
