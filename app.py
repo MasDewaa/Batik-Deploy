@@ -70,25 +70,39 @@ def predict():
     try:
         image_bytes = file.read()
         pil_image = Image.open(io.BytesIO(image_bytes))
+        processed_image = preprocess_image(pil_image)
+        
+        # 1. Lakukan prediksi, hasilnya adalah array probabilitas
+        prediction_array = model.predict(processed_image)[0] # Ambil array pertama dari batch
 
-        processed_image = preprocess_image(pil_image, target_size=(224, 224))
-        prediction = model.predict(processed_image)
-
-        predicted_index = np.argmax(prediction)
-        # Menggunakan class_names yang sudah dimuat dari file
+        # 2. Dapatkan kelas dengan probabilitas tertinggi
+        predicted_index = np.argmax(prediction_array)
         predicted_class = class_names[predicted_index]
-        confidence = float(np.max(prediction))
+        confidence = float(prediction_array[predicted_index])
 
+        # 3. Buat dictionary untuk semua probabilitas {nama_kelas: probabilitas}
+        # Menggunakan zip untuk menggabungkan nama kelas dengan probabilitasnya
+        all_probabilities = {class_names[i]: float(prediction_array[i]) for i in range(len(class_names))}
+        
+        # (Opsional) Jika Anda hanya ingin beberapa probabilitas teratas (misal 5 teratas)
+        sorted_probabilities = sorted(all_probabilities.items(), key=lambda item: item[1], reverse=True)
+        top_5_probabilities = dict(sorted_probabilities[:5])
+
+        # 4. Bangun format JSON yang diinginkan
         return jsonify({
-            "status": "success",
-            "prediction": predicted_class,
-            "confidence_score": confidence,
-            "confidence_percent": f"{confidence * 100:.2f}%"
+            "success": True,
+            "data": {
+                "class_name": predicted_class,
+                "confidence": confidence,
+                "confidence_percent": f"{confidence * 100:.2f}%",
+                "probabilities": top_5_probabilities # atau gunakan top_5_probabilities jika Anda memilih opsi di atas
+            }
         })
+
 
     except Exception as e:
         return jsonify({
-            "status": "error",
+            "status": False,
             "message": "Terjadi kesalahan saat memproses gambar. Pastikan file adalah format gambar yang valid.",
             "error_details": str(e)
         }), 400
