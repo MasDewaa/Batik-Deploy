@@ -27,4 +27,5 @@ EXPOSE 5000
 # ----------------------------
 # Gunakan gunicorn sebagai production server
 # ----------------------------
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["streamlit", "run", "app.py", "--server.port", "${PORT}", "--server.address", "0.0.0.0"]
+
