@@ -12,7 +12,7 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 # Load model
 @st.cache_resource
 def load_my_model():
-    model = load_model("final_tuned_model.keras")
+    model = load_model("mainModel.keras")
     return model
 
 # Load labels
@@ -37,7 +37,7 @@ if uploaded_file is not None:
 
     # Proses prediksi
     img = image.convert("RGB")
-    img = img.resize((224, 224))
+    img = img.resize((160, 160))
     img_array = img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0) / 255.0
 
